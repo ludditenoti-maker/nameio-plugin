@@ -1,0 +1,46 @@
+{
+  "name": "nameio",
+  "version": "1.0.42",
+  "description": "See which shopping questions AI assistants answer with a competitor instead of your store, read how they describe your brand, and draft page fixes you review and add to your store yourself. Also keyword research, site audits and your Search Console and Analytics data.",
+  "author": {
+    "name": "NameIO",
+    "url": "https://getnameio.com"
+  },
+  "homepage": "https://getnameio.com",
+  "license": "MIT",
+  "keywords": [
+    "ai-visibility",
+    "ecommerce",
+    "shopify",
+    "seo",
+    "search-console",
+    "site-audit",
+    "keyword-research"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "NameIO",
+    "shortDescription": "Your store in AI answers",
+    "longDescription": "NameIO shows how AI assistants answer the questions your shoppers ask. It asks those questions on ChatGPT, Gemini and Google AI Overviews (Perplexity on the paid plan), and records which brands each answer names, which sources it cites and how it describes your store.\n\nFrom your assistant you can see where a competitor is named instead of you, read your funnel step by step, and check what your pages and product data give AI to work with. For a question you lose, your assistant reads NameIO's fix brief, writes the page fix and saves it as a draft. You review the draft in NameIO and put it on your store yourself. Later, NameIO shows how the counts moved after the fix, without claiming the fix caused the change.\n\nYou need a NameIO account (sign in with Google). When you connect, you choose read-only or \"Make changes\"; a read-only connection can't change anything.\n\nWhat's not done: NameIO doesn't publish fixes to your store, and it doesn't track Claude's answers.",
+    "developerName": "NameIO",
+    "category": "Data & Analytics",
+    "capabilities": [
+      "See which shopping questions AI assistants answer with a competitor instead of your store",
+      "Read how AI answers describe your brand next to your competitors, check by check",
+      "Get a fix brief for a lost question and save your assistant's page fix as a draft to review",
+      "Check what your site and product data give AI assistants to work with"
+    ],
+    "websiteURL": "https://getnameio.com",
+    "privacyPolicyURL": "https://getnameio.com/privacy",
+    "termsOfServiceURL": "https://getnameio.com/terms",
+    "defaultPrompt": [
+      "Which shopping questions do AI assistants answer with a competitor instead of my store?",
+      "Read my AI funnel and tell me which step to work on first.",
+      "Draft a fix for the question where AI names my competitor instead of me."
+    ],
+    "supportURL": "https://getnameio.com/docs/mcp#help-and-support",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png"
+  }
+}

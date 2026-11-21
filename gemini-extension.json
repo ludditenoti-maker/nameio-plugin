@@ -1,0 +1,11 @@
+{
+  "name": "nameio",
+  "version": "1.0.42",
+  "description": "See which shopping questions AI assistants answer with a competitor instead of your store, read how they describe your brand, and draft page fixes you review yourself.",
+  "mcpServers": {
+    "nameio": {
+      "httpUrl": "https://app.getnameio.com/mcp",
+      "timeout": 120000
+    }
+  }
+}

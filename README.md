@@ -1,73 +1,94 @@
-# NameIO — AI Visibility & Ecommerce SEO Plugin + MCP
+# NameIO — AI Visibility (GEO/AEO) & SEO Plugin + Hosted MCP
 
 [![NameIO MCP connector](https://glama.ai/mcp/connectors/com.getnameio/nameio/badges/score.svg)](https://glama.ai/mcp/connectors/com.getnameio/nameio)
 
-NameIO shows which shopping questions ChatGPT, Gemini, Google AI Overviews, and Perplexity answer with a competitor instead of your store, which websites they cite, how they describe your brand, and what to change on your pages.
+**Connect your Claude, ChatGPT, Codex, or Cursor directly to live AI visibility, Search Console, GA4, keyword, backlink, and technical audit data — and draft reviewable page fixes.**
 
-Your AI assistant does the reasoning. NameIO supplies the live data and saves reviewable drafts.
+Built for **Shopify / ecommerce stores**, **lead-generation sites** (local services, B2B/SaaS, publishers), and the **independent SEO consultants** who audit them.
 
-- **Try the free zero-login store check (no account needed):** [app.getnameio.com/check](https://app.getnameio.com/check)
-- **Website & docs:** [getnameio.com/docs/mcp](https://getnameio.com/docs/mcp)
+- **Free starter tier:** Includes **$1 in live data credits** (no credit card required) — [sign up free](https://app.getnameio.com/sign-up)
+- **Zero-login instant check:** See which brands ChatGPT recommends in your niche — [app.getnameio.com/check](https://app.getnameio.com/check)
+- **Self-serve Pro:** **$54/month** (or $499/year) with $15/month in usage credits included — no enterprise sales calls
 - **Hosted MCP endpoint (Streamable HTTP, OAuth 2.1):** `https://app.getnameio.com/mcp`
-- **Official MCP Registry:** `com.getnameio/nameio`
+- **Official MCP Registry:** `com.getnameio/nameio` · **Docs:** [getnameio.com/docs/mcp](https://getnameio.com/docs/mcp)
 
-## Install
+---
 
-### Claude Code
+## 30-Second Quickstart
+
+### 1. Connect the hosted MCP server
+
+**Claude Code**
 ```bash
 claude mcp add --transport http nameio https://app.getnameio.com/mcp
 ```
 
-### Agent Skills (Claude Code, Cursor, Codex, Windsurf)
+**Install all 15 Agent Skills (Claude Code, Cursor, Codex, Windsurf, Antigravity)**
 ```bash
 npx skills add ludditenoti-maker/nameio-plugin
 ```
 
-### Gemini CLI
+**Gemini CLI**
 ```bash
 gemini extensions install https://github.com/ludditenoti-maker/nameio-plugin
 ```
 
-### Claude Web / Desktop, ChatGPT, and Cursor
-See step-by-step setup (including one-click Cursor install) at [getnameio.com/docs/mcp](https://getnameio.com/docs/mcp).
+**Claude Web / Desktop, ChatGPT, and Cursor (1-click install)**
+See step-by-step setup at [getnameio.com/docs/mcp](https://getnameio.com/docs/mcp).
 
-## What you can do
+### 2. Paste your first prompt
 
-- See which shopping questions ChatGPT, Gemini, and Google AI Overviews answer with a competitor instead of your store (Perplexity on Pro), and which sites their answers link to
-- Read your AI funnel (awareness, consideration, conversion): how often AI names your store, your share of named brands, and your place among them
-- Compare how AI answers describe your brand next to your competitors, check by check
-- Pull a prioritized fix brief and save a reviewable page diff plus deterministic JSON-LD draft (agents only ever save drafts; publishing is always human)
-- Check what your site, crawlers, product feeds, and UCP checkout profile give AI assistants to work with
-- Run keyword research, backlink analysis, site audits, and read Google Search Console and Google Analytics 4 data
+Once OAuth connects (supports **read-only** or **read + draft** scopes), paste this into your assistant:
 
-## Included skills (14)
+> *"Run `whoami`, check my site's AI crawler & structured-data readiness, and read my AI funnel to show which buyer questions ChatGPT and Gemini answer with a competitor instead of me — then pull my top fix brief."*
 
-- `read-your-funnel` — read your awareness/consideration/conversion AI funnel and pick the lowest step to fix first
+---
+
+## What Your Assistant Can Do (78+ Live MCP Tools)
+
+- **Track AI shopping & buyer answers:** See which prompts ChatGPT, Gemini, Google AI Overviews, and Perplexity (Pro) answer with a competitor instead of your brand, and which external URLs get cited.
+- **Read your 3-stage AI funnel:** Awareness, consideration, and conversion presence, share, and placement with sample-size-gated counts — plus a 3-tier citation funnel (retrieved vs. cited vs. converting) for lead-gen sites.
+- **Measure brand framing & sentiment:** Inspect verbatim competitor answers and record structured sentiment reads with quotes (`answer-tone`).
+- **Draft reviewable page fixes:** Pull a prioritized fix brief (`get_fix_brief`) and save a page diff + deterministic JSON-LD draft (`propose_page_fix`). **Agents only ever save drafts; publishing is always human.**
+- **Check AI crawler & checkout readiness:** Verify plain-HTML readability, AI crawler rules, product feeds, and UCP checkout profiles (`/.well-known/ucp`).
+- **Full SEO stack in the same MCP:** Keyword research, SERP competitors, backlinks, technical site audits, Google Search Console, and Google Analytics 4.
+
+---
+
+## Included Skills (15)
+
+- `read-your-funnel` — read your awareness/consideration/conversion AI funnel (and 3-tier citation funnel for lead-gen) and pick the lowest step first
 - `fix-what-ai-says` — pull a prioritized fix brief and draft page fixes for losing prompts or failing site checks
+- `citation-to-lead-audit` — join AI citation gaps, deep-page conversion checks, and GA4 key events into a Citation-to-Lead Roadmap
 - `answer-tone` — record structured sentiment reads with verbatim quotes from stored AI answers
-- `ai-visibility-audit` — full ecommerce AI visibility audit across buying questions and cited sources
-- `ai-prompt-research` — discover the shopping questions people ask AI in your niche
-- `seo-project-setup` — configure store scope, competitors, and Search Console intake
+- `ai-visibility-audit` — full AI visibility audit across buyer questions and cited sources
+- `ai-prompt-research` — discover the real questions people ask AI in your market
+- `seo-project-setup` — configure store or lead-gen scope, competitors, and Search Console intake
 - `seo-audit` — full technical site and search audit
 - `seo-report` — generate a self-contained HTML report from live data
 - `seo-coach` — guided workflows across search and AI visibility
 - `keyword-research` — keyword discovery, metrics, and SERP checks
 - `keyword-clustering` — group keywords by intent and map to pages
 - `competitive-landscape` — map market leaders, themes, and gaps
-- `competitor-analysis` — deep dive on a single rival's footprint
+- `competitor-analysis` — deep dive on a single rival's organic footprint
 - `link-prospecting` — find link prospects and cited third-party sites
 
-## What the plugin runs and sends
+---
 
-This plugin has no executable scripts, hooks, or shell commands. It contains 14 Markdown skills, editor manifests, and one remote MCP server URL (`https://app.getnameio.com/mcp`). When your assistant calls a NameIO tool, inputs go over HTTPS to `app.getnameio.com/mcp` using OAuth 2.1 (with a read-only consent option if you do not want write tools enabled). See our [Privacy Policy](https://getnameio.com/privacy).
+## Live Benchmark Data
+
+We measured **576 live ChatGPT shopping answers across 64 ecommerce categories** (373 brands, 2,033 external citations):
+- [2026 Ecommerce ChatGPT Visibility Study](https://getnameio.com/study/chatgpt-ecommerce-2026)
+- [Interactive 3D AI Shelf](https://getnameio.com/play) (zero login — test which DTC brands ChatGPT actually names)
+- [2026 Lead Gen & Publisher Study](https://getnameio.com/study/chatgpt-lead-gen-2026)
+
+## Security & Privacy
+
+This plugin has **no executable scripts, hooks, or shell commands** — only 15 Markdown skills, editor manifests, and one HTTPS OAuth 2.1 MCP URL (`https://app.getnameio.com/mcp`) with an optional read-only consent toggle. See our [Privacy Policy](https://getnameio.com/privacy).
 
 ## Support
 
 [Help and support](https://getnameio.com/docs/mcp#help-and-support) or email `chris@getnameio.com`.
-
-## What's not done
-
-NameIO does not publish fixes straight to your store yet (you paste approved fixes yourself), and it does not track Claude's answers.
 
 ## License
 

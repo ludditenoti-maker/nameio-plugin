@@ -1,6 +1,6 @@
 ---
 name: answer-tone
-description: Read the tone of the AI answers NameIO has stored for a store and record your own read of how each answer describes each brand it names (positive, mixed, negative or neutral, with short reasons and a quote). Use when the user asks how ChatGPT, Gemini or other AI assistants talk about their store or its competitors, whether AI answers are positive or negative about them, or for a sentiment or reputation read of their AI answers.
+description: Read the tone of the AI answers NameIO has stored for a store or lead-generation site and record your own read of how each answer describes each brand it names (positive, mixed, negative or neutral, with short reasons and a quote). Use when the user asks how ChatGPT, Gemini or other AI assistants talk about their store, site, or competitors, whether AI answers are positive or negative about them, or for a sentiment or reputation read of their AI answers.
 ---
 
 # Answer Tone
@@ -32,8 +32,9 @@ All three use no credits and start no check.
 
 - Read the whole answer before judging; one read per brand per answer.
 - Judge the tone from the answer's own words about that brand, not from the question. "Is Wrenfield a scam?" answered with "No, Wrenfield is a well-reviewed store" is positive for Wrenfield.
-- Read each brand on its own. An answer can be positive about the store and mixed about a competitor.
-- Praise or caution about another brand, the product category or the shopper's situation is not about this brand.
+- Read each brand on its own. An answer can be positive about the site and mixed about a competitor.
+- Praise or caution about another brand, the underlying subject matter (for example, a vehicle safety recall reported by an automotive publisher, or a common roof leak problem discussed by a contractor), or the buyer's situation is not about this brand.
+- For lead-generation sites (`local_service`, `b2b_service`, `publisher_aggregator`), capture profile-relevant tone reasons when the answer raises them: data accuracy, freshness/outdated figures, editorial independence or affiliate bias, licensing/credentials, hidden fees or contract lock-in, and responsiveness/support.
 - When you are unsure between two tones, choose the milder one (`mixed` over `negative`, `neutral` over `positive`) and say why in a reason.
 
 ## What to return

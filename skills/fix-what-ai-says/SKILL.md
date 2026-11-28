@@ -1,24 +1,24 @@
 ---
 name: fix-what-ai-says
-description: Draft fixes for what AI answers say about a store, one fix per signal from NameIO's What to do next list (a competitor named instead, not named, named but not linked, caution words, serious words, a competitor described better, a failing site check), save each as a draft for the user to review, and later report how the metric NameIO set for it moved. Use when the user asks to "fix what AI says about my store", "why does ChatGPT recommend <rival>" instead of them, to "improve how AI describes us", or to "fix my site for AI search".
+description: Draft fixes for what AI answers say about a store or lead-generation site, one fix per signal from NameIO's What to do next list (competitor named instead, not named, named but not linked, retrieved but not cited, citation gap, caution words, serious words, competitor described better, failing site check), save each as a draft for the user to review, and later report how the metric NameIO set for it moved. Use when the user asks to "fix what AI says about my store", "fix what AI says about my site", "why does ChatGPT recommend <rival>" instead of them, to "improve how AI cites or describes us", or to "fix my site for AI search".
 ---
 
 # Fix What AI Says
 
 ## Goal
 
-Turn NameIO's What to do next list into drafts the user can put on their store. NameIO reads the stored AI answers and site checks, ranks the signals, gives the evidence and the rules for each kind, sets the metric a fix should move and records where it starts. You pick a signal with the user, write the text from the store's own facts, and save it as a draft. Nothing is published: the user reviews the draft in NameIO and puts it on their store. NameIO runs no model; the writing is yours.
+Turn NameIO's What to do next list into drafts the user can put on their store or lead-generation site. NameIO reads the stored AI answers and site checks, ranks the signals, gives the evidence and the rules for each kind, sets the metric a fix should move and records where it starts. You pick a signal with the user, branch on `get_fix_brief.leadGen` when present (`local_service`, `b2b_service`, or `publisher_aggregator`), write the text from the site's own facts, and save it as a draft. Nothing is published: the user reviews the draft in NameIO and puts it on their site. NameIO runs no model; the writing is yours.
 
-To find out where the store stands before fixing anything, use `ai-visibility-audit`. For your own read of how answers describe each brand, use `answer-tone`.
+To find out where the site stands before fixing anything, use `ai-visibility-audit` (or `citation-to-lead-audit` for lead-generation sites). For your own read of how answers describe each brand, use `answer-tone`.
 
 ## Tools
 
-- `get_fix_brief`: without `pageUrl`, `promptIds` or `signalId`, the overview: `signals[]` (What to do next, ranked), `signalNotes`, `signalNextStep`, and `technical[]` (the site checks the store fails). With `signalId` and `pageUrl`: that signal's evidence, the rules for its kind, and the metric with where it stands now. Add `newPage: true` when `pageUrl` is a page the store doesn't have yet.
-- `propose_page_fix`: saves your fix as a draft, with `pageUrl`, `promptIds`, `signalId`, `fixType`, `target`, `storeFacts`, the text fields and `why`. Pass `fixId` to revise a draft.
+- `get_fix_brief`: without `pageUrl`, `promptIds` or `signalId`, the overview: `signals[]` (What to do next, ranked), `signalNotes`, `signalNextStep`, `leadGen` (when the project is `lead_gen`), and `technical[]` (the site checks the site fails). With `signalId` and `pageUrl`: that signal's evidence, the rules for its kind, and the metric with where it stands now. Add `newPage: true` when `pageUrl` is a page the site doesn't have yet.
+- `propose_page_fix`: saves your fix as a draft, with `pageUrl`, `promptIds`, `signalId`, `fixType`, `target`, `storeFacts` (online stores) or `proofFacts` (lead-gen sites), the text fields (`seoTitle`, `metaDescription`, `section`, `faq`, plus Lead Gen `summaryBlock`, `comparisonTable`, `ctaModule`), and `why`. Pass `fixId` to revise a draft.
 - `list_page_fixes`: the project's fixes with `fixType`, `targetMetric`, `baseline` and status; `fixId` reads one in full.
-- `get_fix_impact`: for an applied fix, its `target` block (the metric, Before, Day 7 and Day 28, the outcome) and the answer counts before and after.
-- `get_site_readiness`: the store's and competitors' site checks as counts, with evidence, product data and history.
-- `get_metric_series`: one count over time, such as `vis.named`, `vis.cited`, `rep.withCaution`, `rep.serious`, `rep.worse` (with `competitor`) or `site.passed`.
+- `get_fix_impact`: for an applied fix, its `target` block (the metric, Before, Day 7 and Day 28, the outcome), the answer counts before and after, and Search Console + Google Analytics traffic (orders/revenue for stores, or engaged sessions + leads & key events for lead-gen sites).
+- `get_site_readiness`: the site's and competitors' site checks as counts, with evidence, profile-aware checks, and history.
+- `get_metric_series`: one count over time, such as `vis.named`, `vis.cited`, `vis.retrieved`, `vis.citedShare`, `vis.retrievalToCitation`, `rep.withCaution`, `rep.serious`, `rep.worse` (with `competitor`) or `site.passed`.
 
 All of them use no credits and start no check. The four fix tools need a hosted NameIO connection; saving needs one that can make changes (the brief's `canSave`).
 
@@ -36,11 +36,18 @@ All of them use no credits and start no check. The four fix tools need a hosted 
 - **gap** (competitor named instead): answer each question in the first sentence of the new section, with what the store sells, for whom and why it fits.
 - **unnamed** (not named): say plainly, with the store's name, what the store is and what it sells.
 - **uncited** (named, not linked): give one specific sentence per question that an answer can quote and link to; see `evidence.citedInstead` for the pages linked now.
-- **caution**: answer the worry in `evidence.sentences` for its `cueKind` (price, quality, fit, service, trust, stock) with facts the page states. For service and trust, send the policy page's shipping and return facts in `storeFacts`.
+- **retrieved_not_cited** (AI read your page, cited another — Lead Gen): inspect `leadGen.retrievedUrls` alongside the cited URLs and fan-out queries. The page is already discovered by AI search, so edit that exact URL rather than creating a new page: lead with an answer-first `summaryBlock` directly under the H1, add a dated `comparisonTable` when comparing options/models/tiers, and pair a clean `ctaModule` if the page is a conversion dead end.
+- **citation_gap** (answers cite other sites, never yours — Lead Gen): check `leadGen.thirdPartyCitedDomains` first. When third-party surfaces (Reddit, G2, Yelp, Avvo, directories, industry roundups) dominate the citations, tell the user plainly that getting listed or reviewed on those third-party domains matters more than rewriting an unrelated page. When owned pages are missing coverage for the comparison, service-area, or problem query, draft a `target: { "kind": "new_page" }` with `summaryBlock`, `comparisonTable`, `faq`, and `ctaModule`.
+- **caution**: answer the worry in `evidence.sentences` for its `cueKind` (price, quality, fit, service, trust, stock) with facts the page states. For stores, send policy shipping and return facts in `storeFacts`. For lead-gen sites, send verified credentials, service area, fee model, SLA, or editorial methodology facts in `proofFacts`.
 - **serious**: follow the playbook in the rules. Tell the user that NameIO can't change what other sites say and name the sites in `evidence.citedDomains`. Never repeat a word from `evidence.accusationWords`, not even to deny it; write what is true instead.
-- **rival_better** (a competitor described better): answer what AI praises in `evidence.sentences` with the store's own facts, never by copying them. Don't name the competitor on the page unless the user confirms a fair comparison.
-- **technical** (a failing site check): find its row in `technical[]` by `checkId`. When `nameioBuilds` is true, NameIO builds the fix itself (`builds`: robots.txt lines, structured data, a correction file, settings steps). Don't write it: point the user at `checkUrl` on Site readiness, or at `siteFix.reviewUrl` when a fix is open. Write a page fix only when the check is about text on a page, such as a missing policy page.
-- **storeFacts**: each fact (`returnDays`, `returnFees`, `returnCountries`, `shippingCountries`, `deliveryDaysMin`, `deliveryDaysMax`) is `{ "value": ..., "quote": "..." }`, with the policy page's exact words in `quote`. NameIO uses a fact only after the user ticks it.
+- **rival_better** (a competitor described better): answer what AI praises in `evidence.sentences` with the site's own facts, never by copying them. Don't name the competitor on the page unless the user confirms a fair comparison.
+- **technical** (a failing site check): find its row in `technical[]` by `checkId`. When `nameioBuilds` is true, NameIO builds the fix itself (`builds`: robots.txt lines, structured data, Lead Gen trust page skeletons, deep-page CTA + GA4 snippet blueprints, IndexNow key, a correction file, or settings steps). Don't write it: point the user at `checkUrl` on Site readiness, or at `siteFix.reviewUrl` when a fix is open. Write a page fix only when the check is about text on a page, such as a missing policy or methodology page.
+- **storeFacts** (online stores): each fact (`returnDays`, `returnFees`, `returnCountries`, `shippingCountries`, `deliveryDaysMin`, `deliveryDaysMax`) is `{ "value": ..., "quote": "..." }`, with the policy page's exact words in `quote`. NameIO uses a fact only after the user ticks it.
+- **Lead Gen blocks (`summaryBlock`, `comparisonTable`, `ctaModule`, `proofFacts`)**:
+  - `summaryBlock` (max 600 chars): 2–4 plain, quotable sentences placed directly under the H1 answering the core question with dated, page-backed facts.
+  - `comparisonTable` (2–6 columns × 1–12 rows, plain text): structured specification or comparison matrix (`caption`, `headers`, `rows`). Every numeric cell must come from the page or verified `project_proof_facts`.
+  - `ctaModule`: non-intrusive conversion module (`placement`, `headline`, `body`, `ctaLabel`, `actionKind`, optional `targetUrlOrAnchor`, `disclosureLine` for affiliate/partner links, `recommendedGa4Event` for Prove).
+  - `proofFacts`: typed site facts (`service_area`, `starting_price`, `fee_model`, `license_credential`, `response_sla`, `consultation_offer`, `data_sources`, `refresh_cadence`, `editorial_disclosure`, `years_operating`, `phone`, `street_address`), each `{ "value": "...", "quote": "...", "sourceUrl": "..." }` quoting the live page verbatim. Promoted to `project_proof_facts` and used in structured data only after the user ticks them in review.
 
 ## When a tool refuses
 

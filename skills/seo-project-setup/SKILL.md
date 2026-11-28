@@ -15,15 +15,16 @@ Be friendly, practical, and structured. Ask questions in small batches. Explain 
 
 ## Where the answers go
 
-Two project-context MCP tools do all the writing. Both are free — they spend no credits.
+Three free project tools do all the writing — none spend credits or start checks.
 
-- `get_project_context(projectId)`: everything already known about the project, plus a `missingSections` list.
+- `get_project_context(projectId)`: everything already known about the project (including `profile` — business model, lead-gen profile, service areas, GA4 conversion events, and verified proof facts), plus a `missingSections` list.
 - `update_project_context(projectId, updates)`: a list of patch ops. The ones this skill uses:
   - `{ section: "business_overview" | "current_goal" | "positioning" | "writing_preferences", content }`
   - `{ addCompetitors: [{ domain, name?, notes? }] }`
   - `{ addKeyPages: [{ url, role: "hub" | "spoke" | "money" | "other", topic?, notes? }] }`
   - `{ customSection: "<slug>", title?, content }` for anything that does not fit a typed section
   - `{ appendResearchLog: { summary } }` when this session spends credits
+- `set_project_profile(projectId, ...)`: sets the project's `businessModel` (`"ecommerce"` or `"lead_gen"`), `leadGenProfile` (`"local_service"`, `"b2b_service"`, or `"publisher_aggregator"`), `primaryWinMode` (`"recommend"`, `"cite"`, or `"both"`), `targetAudience`, `primarySubject`, `conversionLabel`, `serviceAreas`, and GA4 `conversionEvents` (`primary_lead`, `partner_click`, `micro_conversion`). Confirm with the user before saving.
 
 Write in batches as the interview progresses — do not hold every answer until the end. Sections are prose (~4,000 characters each), so a few tight paragraphs, not a transcript.
 
@@ -56,6 +57,11 @@ Ask for:
 - Target countries/languages
 - Whether the site is new, established, migrating, or recovering from a drop
 - CMS or publishing workflow, if relevant
+- **Business model & profile:** whether the site is an online store (`ecommerce`) or a lead-generation site (`lead_gen`: `local_service`, `b2b_service`, or `publisher_aggregator`). For lead-generation sites, also capture:
+  - Service areas (cities, metro areas, regions, or national/global scope)
+  - What a lead or conversion is called (`conversionLabel`, e.g., "Quote request", "Demo booking", "Deal alert signup")
+  - Which GA4 key events count as real leads or partner clicks (`conversionEvents`: `primary_lead`, `partner_click`, `micro_conversion`) so Prove attribution stays clean.
+  Confirm these settings with the user and save them with `set_project_profile`.
 
 Write the durable parts to `business_overview`: what the business does, who it is for, the target markets/locales, and the site's current stage.
 

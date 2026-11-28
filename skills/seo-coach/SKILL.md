@@ -87,6 +87,7 @@ Want to go deeper?
 - `seo-project-setup`: verifies MCP, interviews the user about scope, goals, positioning, competitors, and key pages, and saves it all to the project's shared context. Also connects Google Search Console (or imports GSC exports).
 - `seo-audit`: audits a site and explains material SEO problems, worthwhile improvements, and their likely effects on traffic and the business. A useful starting point when you have an existing site and want to understand what is worth improving.
 - `ai-visibility-audit`: turns AI answer evidence and the pages cited instead of the brand into one to three changes most likely to get it mentioned or cited.
+- `citation-to-lead-audit`: audits a lead-generation site's citation-to-lead pipeline by joining AI retrieval/citation gaps, deep-page CTA readiness, and GA4 key events into a prioritized roadmap report.
 - `ai-prompt-research`: finds questions people ask about a market, with ChatGPT's answers and the domains they cite, and suggests which to track. Research only.
 - `keyword-research`: finds search opportunities from seed topics and evaluates volume, difficulty, CPC, intent, and SERPs.
 - `keyword-clustering`: groups keywords by intent and maps clusters to existing or proposed pages.

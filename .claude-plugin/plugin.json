@@ -1,8 +1,8 @@
 {
   "name": "nameio",
   "displayName": "NameIO",
-  "version": "1.0.42",
-  "description": "See which shopping questions AI assistants answer with a competitor instead of your store, read how they describe your brand, and draft page fixes you review and add to your store yourself. Also keyword research, site audits and your Search Console and Analytics data.",
+  "version": "1.0.43",
+  "description": "See which buyer questions AI assistants answer with a competitor instead of your store or lead-generation site, inspect your AI citation funnel, and draft page fixes you review and add yourself. Also keyword research, site audits and your Search Console and Analytics data.",
   "author": {
     "name": "NameIO",
     "url": "https://getnameio.com"
@@ -14,6 +14,7 @@
   "keywords": [
     "ai-visibility",
     "ecommerce",
+    "lead-generation",
     "shopify",
     "seo",
     "search-console",

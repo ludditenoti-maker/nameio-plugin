@@ -1,20 +1,20 @@
 ---
 name: read-your-funnel
-description: Read a store's AI funnel in NameIO (for awareness, consideration and conversion, how often AI names the store, its share of the brands AI names and its place among them), find the lowest step, suggest questions or other wordings for steps with too few answers, then open the fix brief for the step to work on. Use when the user asks to read their AI funnel, where AI loses their shoppers, which funnel stage is weakest, how they stand against competitors at each stage, or what to work on next in AI answers.
+description: Read a store or lead-generation site's AI funnel in NameIO (awareness, consideration and conversion presence, share, place, plus the 3-tier citation funnel for lead-gen sites), find the lowest step, suggest profile-aware questions or other wordings for steps with too few answers, then open the fix brief for the step to work on. Use when the user asks to read their AI funnel, where AI loses their shoppers or prospects, which funnel stage is weakest, how they stand against competitors at each stage, or what to work on next in AI answers.
 ---
 
 # Read Your Funnel
 
 ## Goal
 
-Tell the user where their store stands in AI answers at each funnel step, in the numbers and words NameIO gives, and turn that into one next step: more questions where a step has too few answers, other wordings on the paid plan, or a fix brief for the step to work on. NameIO counts the answers; you read the counts and explain them. You save nothing without the user's yes, and you never publish anything.
+Tell the user where their store or lead-generation site stands in AI answers at each funnel step, in the numbers and words NameIO gives, and turn that into one next step: more questions where a step has too few answers, other wordings on the paid plan, or a fix brief for the step to work on. NameIO counts the answers; you read the counts and explain them. You save nothing without the user's yes, and you never publish anything.
 
-For the full picture of where the store stands, with the pages AI cites, use `ai-visibility-audit`. To write and save the fix, use `fix-what-ai-says`. How NameIO counts is at https://getnameio.com/docs/methodology.
+For the full picture of where the site stands, with the pages AI cites, use `ai-visibility-audit` (or `citation-to-lead-audit` for lead-generation sites). To write and save the fix, use `fix-what-ai-says`. How NameIO counts is at https://getnameio.com/docs/methodology.
 
 ## Tools
 
-- `get_funnel` (`projectId`, `engine`, `period`): the funnel. `engine` is one engine, or `pooled` (the default: every engine, each with equal weight). `period` is `4w` (the default) or `13w`: which change the text leads with; the output has both. For each stage, `presence`, `share` and `rank`, each with `state`, `percent`, `value`, `lo`, `hi` and `count`; `rank.place`; `basedOn`; and `changes` with the `recent`, `sinceStart`, `sinceFix` and `quarter` readouts. Also `lowestStep`, `movers`, `brands`, `answeredRate`, `events` and `versions`. Read it first, every time.
-- `get_metric_series` with `stage` (and `basket`: `current`, every question asked, or `same`, only the questions asked through most of the weeks shown): one stage's numbers week by week, with `metric` `vis.named`, `vis.mentionShare` or `rep.rank`.
+- `get_funnel` (`projectId`, `engine`, `period`): the funnel. `engine` is one engine, or `pooled` (the default: every engine, each with equal weight). `period` is `4w` (the default) or `13w`: which change the text leads with; the output has both. For each stage, `presence`, `share` and `rank`, each with `state`, `percent`, `value`, `lo`, `hi` and `count`; `rank.place`; `basedOn`; and `changes` with the `recent`, `sinceStart`, `sinceFix` and `quarter` readouts. Also `lowestStep`, `movers`, `brands`, `answeredRate`, `events`, `versions`, and (for `lead_gen` projects) `citationFunnel` (`vis.retrieved`, `vis.retrievalToCitation`, `vis.citedShare`, and `primaryShareMetric`). Read it first, every time.
+- `get_metric_series` with `stage` (and `basket`: `current`, every question asked, or `same`, only the questions asked through most of the weeks shown): one stage's numbers week by week, with `metric` `vis.named`, `vis.mentionShare`, `rep.rank`, or the citation metrics `vis.retrieved`, `vis.citedShare`, `vis.retrievalToCitation`.
 - `get_ai_visibility_tracker`: the questions, with their ids, `stage`, `stageSource`, `stageConfidence` and `phrasings`.
 - `estimate_ai_visibility_cost` (with `patch`) and `save_ai_visibility_tracker`: what new questions cost per check, and saving them.
 - `set_question_phrasings` (`projectId`, `promptId`, `phrasings`): up to 2 other wordings of one question. On hosted NameIO it needs the paid plan.
@@ -25,24 +25,28 @@ Reading uses no credits and starts no check. Saving needs a connection that can 
 
 ## Workflow
 
-1. **Read the funnel.** Resolve the project with `list_projects` (ask only if the match is ambiguous), then call `get_funnel` with only `projectId`. If the user asks about one engine, read it again with `engine`.
-2. **The lowest step.** When `lowestStep.state` is `named`, give the lowest-step line as the text gives it. Otherwise say that no step is named yet and give the reasons in the text's words. Never pick a lowest step yourself from the numbers.
-3. **Every stage.** For each measure, say what its `state` allows:
+1. **Read the funnel.** Resolve the project with `list_projects` (check `businessModel` and `leadGenProfile`; ask only if the match is ambiguous), then call `get_funnel` with only `projectId`. If the user asks about one engine, read it again with `engine`.
+2. **Lead by profile.**
+   - For `lead_gen` with `publisher_aggregator` (`citationFunnel.primaryShareMetric === "vis.citedShare"`): lead with the 3-tier `citationFunnel` — **Read by AI search** (`vis.retrieved`), **Cited when read** (`vis.retrievalToCitation`), and **Share of cited links** (`vis.citedShare`) — before stage presence and place.
+   - For `local_service`, `b2b_service`, and `ecommerce`: lead with Shortlist Presence, Share, and Place at the lowest step, and include `citationFunnel` right after when present on lead-gen projects.
+3. **The lowest step.** When `lowestStep.state` is `named`, give the lowest-step line as the text gives it. Otherwise say that no step is named yet and give the reasons in the text's words. Never pick a lowest step yourself from the numbers.
+4. **Every stage.** For each measure, say what its `state` allows:
    - `count`: the count, such as "AI named you in 9 of 40 answers". Never a percentage.
    - `few` or `shown`: the percentage with its likely range, such as "31% (likely 22% to 41%)".
    - `echo`, `noBrands`, `none` or `recounting`: say what the text says.
    - The place as given, such as "2nd to 4th of 6 brands named", with "a rough guide" while `roughGuide` is true. Never a place as a percentage.
    - "Based on 252 answers to 28 questions, last 4 weeks", from `basedOn`.
    - The change in points with its likely range, as the text says it ("Up 12 points vs the 4 weeks before (likely +4 to +20)"), or its state: provisional, steady, can't tell yet, not enough weeks yet.
-   When a stage's questions mostly name the store, its first row is answers about you; say so.
-4. **Name the lever.** A level is thin when its state is `count` or `few`, or the lowest step's reasons say a step has too few answers: the lever is "add a question". A change is thin when it can't tell yet or has not enough weeks: the lever is "more weeks narrow it". A thin change alone needs no new questions: say that more weeks narrow it.
-5. **Questions for a thin stage.** Read `get_ai_visibility_tracker` and list the stage's questions. Write 3 to 5 new questions for that stage, in a shopper's words and without the store's name (a question with the store's name counts as answers about you, not in presence, share or place):
-   - **Awareness:** learning about the product type or the problem, such as "What should I look for in wool hiking socks?"
-   - **Consideration:** choosing between brands, such as "Which brands make the warmest wool socks?" or "Is Wrenfield or Cobbleridge better for hiking socks?"
-   - **Conversion:** buying, such as "Where can I buy wool socks with free returns?"
+   When a stage's questions mostly name the site, its first row is answers about you; say so.
+5. **Name the lever.** A level is thin when its state is `count` or `few`, or the lowest step's reasons say a step has too few answers: the lever is "add a question". A change is thin when it can't tell yet or has not enough weeks: the lever is "more weeks narrow it". A thin change alone needs no new questions: say that more weeks narrow it.
+6. **Questions for a thin stage.** Read `get_ai_visibility_tracker` and list the stage's questions. Write 3 to 5 new questions for that stage, in a real buyer's words and without the brand's name (a question naming your brand counts as answers about you, not presence, share or place), tailored to the project profile:
+   - **Online store (`ecommerce`):** Awareness (what to look for), Consideration (which brands compare best), Conversion (where to buy with returns/shipping).
+   - **Local service (`local_service`):** Geo-conditioned questions anchored to saved service areas — Awareness (symptoms, repair vs replace, permit rules in `<city>`), Consideration (best rated / licensed `<service>` companies in `<city>`), Conversion (who offers emergency / same-day quotes or financing in `<city>`).
+   - **B2B / SaaS (`b2b_service`):** ICP-conditioned questions — Awareness (how `<role>` solves `<problem>`, architecture/compliance tradeoffs), Consideration (top `<category>` tools/agencies for `<company size>`, `<rival A>` vs `<rival B>`), Conversion (pricing model, implementation timeline, SOC 2 / enterprise requirements).
+   - **Publisher / data aggregator (`publisher_aggregator`):** Data and comparison questions — Awareness (which models/years/specs to avoid, common failure data), Consideration (`<option A>` vs `<option B>` real-world specs/range/costs), Conversion (where to compare verified prices, calculate total ownership cost, or check checklists before buying).
    Leave out any question the tracker already asks in other words. Show the questions and what they add to a check (`estimate_ai_visibility_cost` with `patch.prompts`). Save only after the user says yes, with `save_ai_visibility_tracker` (`prompts` with `text` and `topic`, no `id`). Then read the tracker again: when a new question has another `stage` than the one you meant, or `stageConfidence` is `low`, ask the user and use `set_question_stage` only on their yes.
-6. **Other wordings (paid plan).** For each of the stage's questions, you can write 2 other ways a shopper asks the same thing. Each wording names the same brands as the question and no others. Show them, and save only after the user says yes, with `set_question_phrasings`: the list replaces the question's wordings, so send the ones to keep with the new ones. Read its `notes` and its text: until a check takes more than one answer per question, checks ask only the question's own text. On the free plan the tool refuses; say that other wordings need the paid plan.
-7. **The fix brief.** Call `get_fix_brief` with only `projectId`. Pick, with the user, a signal whose `promptIds` are questions in the lowest step (or the stage the user chose), using the tracker's stages. Call `get_fix_brief` again with its `signalId` and a `pageUrl` from its `pages`. Give `fixPlan.words` as given: the smallest change this fix could show. When `fixPlan.stagger` is there, give its `offer` and let the user choose; never stagger on your own. Then write and save the draft with `fix-what-ai-says`.
+7. **Other wordings (paid plan).** For each of the stage's questions, you can write 2 other ways a buyer asks the same thing. Each wording names the same brands as the question and no others. Show them, and save only after the user says yes, with `set_question_phrasings`: the list replaces the question's wordings, so send the ones to keep with the new ones. Read its `notes` and its text: until a check takes more than one answer per question, checks ask only the question's own text. On the free plan the tool refuses; say that other wordings need the paid plan.
+8. **The fix brief.** Call `get_fix_brief` with only `projectId`. Pick, with the user, a signal whose `promptIds` are questions in the lowest step (or the stage the user chose), using the tracker's stages. Call `get_fix_brief` again with its `signalId` and a `pageUrl` from its `pages`. Give `fixPlan.words` as given: the smallest change this fix could show. When `fixPlan.stagger` is there, give its `offer` and let the user choose; never stagger on your own. Then write and save the draft with `fix-what-ai-says`.
 
 ## What to return
 
